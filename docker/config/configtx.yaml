@@ -45,7 +45,6 @@ Organizations:
           Rule: "OR('bojackMSP.member','bojackMSP.admin')"
       Admins:
           Type: Signature
-          # UPDATE: Dec 15, 2019 - This is a dev env so its OK in Prod ... use AcmeMSP.admin
           Rule: "OR('bojackMSP.member','bojackMSP.admin')"
       Endorsement:
           Type: Signature
@@ -69,7 +68,6 @@ Organizations:
           Rule: "OR('newlifeMSP.member','newlifeMSP.admin')"
       Admins:
           Type: Signature
-          # UPDATE: Dec 15, 2019 - This is a dev env so its OK in Prod ... use AcmeMSP.admin
           Rule: "OR('newlifeMSP.member','newlifeMSP.admin')"
       Endorsement:
           Type: Signature
@@ -93,7 +91,6 @@ Organizations:
           Rule: "OR('goodlifeMSP.member','goodlifeMSP.admin')"
       Admins:
           Type: Signature
-          # UPDATE: Dec 15, 2019 - This is a dev env so its OK in Prod ... use AcmeMSP.admin
           Rule: "OR('goodlifeMSP.member','goodlifeMSP.admin')"
       Endorsement:
           Type: Signature
@@ -117,7 +114,6 @@ Organizations:
           Rule: "OR('lifemedicineMSP.member','lifemedicineMSP.admin')"
       Admins:
           Type: Signature
-          # UPDATE: Dec 15, 2019 - This is a dev env so its OK in Prod ... use AcmeMSP.admin
           Rule: "OR('lifemedicineMSP.member','lifemedicineMSP.admin')"
       Endorsement:
           Type: Signature
@@ -125,6 +121,52 @@ Organizations:
     AnchorPeers:
       - Host: peer0.epharma.com
         Port: 7051
+
+  - &Org5
+    Name: lifehospital
+    ID: lifehospitalMSP
+    MSPDir: ./crypto-config/peerOrganizations/ehospital.com/msp
+    Policies: &lifehospitalPolicies
+      Readers:
+          Type: Signature
+        #   Rule: "OR('AcmeMSP.admin', 'AcmeMSP.peer', 'AcmeMSP.client')"
+          Rule: "OR('lifehospitalMSP.member','lifehospitalMSP.admin')"
+      Writers:
+          Type: Signature
+        #   Rule: "OR('AcmeMSP.admin', 'AcmeMSP.client')"
+          Rule: "OR('lifehospitalMSP.member','lifehospitalMSP.admin')"
+      Admins:
+          Type: Signature
+          Rule: "OR('lifehospitalMSP.member','lifehospitalMSP.admin')"
+      Endorsement:
+          Type: Signature
+          Rule: "OR('lifehospitalMSP.member','lifehospitalMSP.admin')"
+    AnchorPeers:
+      - Host: peer0.ehospital.com
+        Port: 7051
+
+  - &Org6
+    Name: lifelab
+    ID: lifelabMSP
+    MSPDir: ./crypto-config/peerOrganizations/elab.com/msp
+    Policies: &lifelabPolicies
+      Readers:
+          Type: Signature
+        #   Rule: "OR('AcmeMSP.admin', 'AcmeMSP.peer', 'AcmeMSP.client')"
+          Rule: "OR('lifelabMSP.member','lifelabMSP.admin')"
+      Writers:
+          Type: Signature
+        #   Rule: "OR('AcmeMSP.admin', 'AcmeMSP.client')"
+          Rule: "OR('lifelabMSP.member','lifelabMSP.admin')"
+      Admins:
+          Type: Signature
+          Rule: "OR('lifelabMSP.member','lifelabMSP.admin')"
+      Endorsement:
+          Type: Signature
+          Rule: "OR('lifelabMSP.member','lifelabMSP.admin')"
+    AnchorPeers:
+      - Host: peer0.elab.com
+        Port: 7051                  
 
 
   
@@ -150,7 +192,6 @@ Orderer: &OrdererDefaults
         Rule: "ANY Writers"
     Admins:
         Type: ImplicitMeta  
-        # UPDATED December 15, 2019
         Rule: "ANY Admins"
         # Rule: "MAJORITY Admins"
 
@@ -367,6 +408,8 @@ Profiles:
                   - <<: *Org2
                   - <<: *Org3
                   - <<: *Org4
+                  - <<: *Org5
+                  - <<: *Org6
 
       Application:
             <<: *ApplicationDefaults
@@ -376,6 +419,8 @@ Profiles:
                 - <<: *Org2
                 - <<: *Org3
                 - <<: *Org4
+                - <<: *Org5
+                - <<: *Org6
 
 
                   
@@ -391,6 +436,8 @@ Profiles:
             - <<: *Org2
             - <<: *Org3
             - <<: *Org4
+            - <<: *Org5
+            - <<: *Org6
 
           
 

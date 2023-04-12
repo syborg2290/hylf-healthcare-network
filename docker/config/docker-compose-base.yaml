@@ -17,6 +17,8 @@ volumes:
   data-peer0.healthcare.com:
   data-peer0.insurance.com:
   data-peer0.epharma.com:
+  data-peer0.ehospital.com:
+  data-peer0.elab.com:
 
 services:
 
@@ -479,4 +481,115 @@ services:
       - 10052:7052
     networks:
       - healthcare
+
+
+  peer0.ehospital.com:
+    container_name: peer0.ehospital.com
+    image: hyperledger/fabric-peer:2.2
+    # landing directory
+    working_dir: $HOME
+    # command: peer node start --peer-chaincodedev=true
+    command: peer node start
+    # Environment setup for peer
+    environment:
+      - FABRIC_CFG_PATH=/var/hyperledger/config
+      - FABRIC_LOGGING_SPEC=DEBUG
+      - GOPATH=/opt/gopath
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=config_healthcare
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.patient.com:7051
+
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_PROFILE_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/var/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/var/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/var/hyperledger/fabric/tls/ca.crt
+      # Peer specific variabes
+      - CORE_PEER_ID=peer0.ehospital.com                               #
+      - CORE_PEER_ADDRESS=peer0.ehospital.com:7051                       #
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051                                
+      - CORE_PEER_CHAINCODEADDRESS=peer0.ehospital.com:7052              #
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052                      
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.ehospital.com:7051              #
+      - CORE_PEER_GOSSIP_ENDPOINT=peer0.ehospital.com:7051              #
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.ehospital.com:7051       #
+      - CORE_PEER_LOCALMSPID=lifemedicineMSP                                        #
+      - CORE_PEER_FILESYSTEMPATH=/var/hyperledger/fabric/production
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+
+    # host file system mappings
+    volumes:
+      # Folder with channel create tx file
+      - /var/run/docker.sock:/host/var/run/docker.sock
+      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/ehospital:/var/hyperledger/config
+      # Map the folder with MSP for Peer
+      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/peerOrganizations/ehospital.com/peers/peer0.ehospital.com/msp:/var/hyperledger/config/msp
+      # Added to support the TLS setup
+      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/peerOrganizations/ehospital.com/peers/peer0.ehospital.com/tls:/var/hyperledger/fabric/tls
+      - /var/run/:/var/run/
+      - data-peer0.ehospital.com:/var/hyperledger/production
+    depends_on: 
+      - orderer.healthcare.com
+    # Map the ports on Host VM to container ports
+    ports:
+      - 11051:7051
+      - 11052:7052
+    networks:
+      - healthcare
+
+
+  peer0.elab.com:
+    container_name: peer0.elab.com
+    image: hyperledger/fabric-peer:2.2
+    # landing directory
+    working_dir: $HOME
+    # command: peer node start --peer-chaincodedev=true
+    command: peer node start
+    # Environment setup for peer
+    environment:
+      - FABRIC_CFG_PATH=/var/hyperledger/config
+      - FABRIC_LOGGING_SPEC=DEBUG
+      - GOPATH=/opt/gopath
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=config_healthcare
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.patient.com:7051
+
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_PROFILE_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/var/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/var/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/var/hyperledger/fabric/tls/ca.crt
+      # Peer specific variabes
+      - CORE_PEER_ID=peer0.elab.com                               #
+      - CORE_PEER_ADDRESS=peer0.elab.com:7051                       #
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051                                
+      - CORE_PEER_CHAINCODEADDRESS=peer0.elab.com:7052              #
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052                      
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.elab.com:7051              #
+      - CORE_PEER_GOSSIP_ENDPOINT=peer0.elab.com:7051              #
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.elab.com:7051       #
+      - CORE_PEER_LOCALMSPID=lifemedicineMSP                                        #
+      - CORE_PEER_FILESYSTEMPATH=/var/hyperledger/fabric/production
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+
+    # host file system mappings
+    volumes:
+      # Folder with channel create tx file
+      - /var/run/docker.sock:/host/var/run/docker.sock
+      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/elab:/var/hyperledger/config
+      # Map the folder with MSP for Peer
+      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/peerOrganizations/elab.com/peers/peer0.elab.com/msp:/var/hyperledger/config/msp
+      # Added to support the TLS setup
+      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/peerOrganizations/elab.com/peers/peer0.elab.com/tls:/var/hyperledger/fabric/tls
+      - /var/run/:/var/run/
+      - data-peer0.elab.com:/var/hyperledger/production
+    depends_on: 
+      - orderer.healthcare.com
+    # Map the ports on Host VM to container ports
+    ports:
+      - 12051:7051
+      - 12052:7052
+    networks:
+      - healthcare    
+          
   

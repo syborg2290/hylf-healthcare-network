@@ -82,6 +82,32 @@ PeerOrgs:
     CA:
       Hostname: ca
       CommonName: "ca-epharma.com"
+  - Name: lifehospital
+    Domain: ehospital.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: peer0
+        CommonName: peer0.ehospital.com
+        SANS:
+          - localhost
+    Users:
+      Count: 0
+    CA:
+      Hostname: ca
+      CommonName: "ca-ehospital.com"
+  - Name: lifelab
+    Domain: elab.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: peer0
+        CommonName: peer0.elab.com
+        SANS:
+          - localhost
+    Users:
+      Count: 0
+    CA:
+      Hostname: ca
+      CommonName: "ca-elab.com"            
 
 
 
