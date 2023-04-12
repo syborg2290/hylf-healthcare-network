@@ -1,0 +1,366 @@
+
+Capabilities:
+  Application: &ApplicationCapabilities
+    V2_0: true
+  Orderer: &OrdererCapabilities
+    V2_0: true
+  Channel: &ChannelCapabilities
+    V2_0: true
+
+# ORGANIZATIONS
+Organizations:
+  - &Orderer
+    Name: OrdererMSP
+    SkipAsForeign: false
+    ID: OrdererMSP
+    MSPDir: ./crypto-config/ordererOrganizations/healthcare.com/msp
+    Policies: &OrdererPolicies
+      Readers:
+          Type: Signature
+          Rule: "OR('OrdererMSP.member')"
+      Writers:
+          Type: Signature
+          Rule: "OR('OrdererMSP.member')"
+      Admins:
+          Type: Signature
+          Rule: "OR('OrdererMSP.admin')"
+      Endorsement:
+          Type: Signature
+          Rule: "OR('OrdererMSP.member')"
+
+  - &Org1
+    Name: Bojack
+    ID: BojackMSP
+    MSPDir: ./crypto-config/peerOrganizations/patient.com/msp
+    Policies: &BojackPolicies
+      Readers:
+          Type: Signature
+        #   Rule: "OR('AcmeMSP.admin', 'AcmeMSP.peer', 'AcmeMSP.client')"
+          Rule: "OR('BojackMSP.member')"
+      Writers:
+          Type: Signature
+        #   Rule: "OR('AcmeMSP.admin', 'AcmeMSP.client')"
+          Rule: "OR('BojackMSP.member')"
+      Admins:
+          Type: Signature
+          Rule: "OR('BojackMSP.member')"
+      Endorsement:
+          Type: Signature
+          Rule: "OR('BojackMSP.member')"
+    AnchorPeers:
+      - Host: peer0.patient.com
+        Port: 7051
+
+  - &Org2
+    Name: NewLife
+    ID: NewLifeMSP
+    MSPDir: ./crypto-config/peerOrganizations/healthcare.com/msp
+    Policies: &NewLifePolicies
+      Readers:
+          Type: Signature
+        #   Rule: "OR('AcmeMSP.admin', 'AcmeMSP.peer', 'AcmeMSP.client')"
+          Rule: "OR('NewLifeMSP.member')"
+      Writers:
+          Type: Signature
+        #   Rule: "OR('AcmeMSP.admin', 'AcmeMSP.client')"
+          Rule: "OR('NewLifeMSP.member')"
+      Admins:
+          Type: Signature
+          Rule: "OR('NewLifeMSP.member')"
+      Endorsement:
+          Type: Signature
+          Rule: "OR('NewLifeMSP.member')"
+    AnchorPeers:
+      - Host: peer0.healthcare.com
+        Port: 7051
+
+  - &Org3
+    Name: GoodLife
+    ID: GoodLifeMSP
+    MSPDir: ./crypto-config/peerOrganizations/insurance.com/msp
+    Policies: &GoodLifePolicies
+      Readers:
+          Type: Signature
+        #   Rule: "OR('AcmeMSP.admin', 'AcmeMSP.peer', 'AcmeMSP.client')"
+          Rule: "OR('GoodLifeMSP.member')"
+      Writers:
+          Type: Signature
+        #   Rule: "OR('AcmeMSP.admin', 'AcmeMSP.client')"
+          Rule: "OR('GoodLifeMSP.member')"
+      Admins:
+          Type: Signature
+          Rule: "OR('GoodLifeMSP.member')"
+      Endorsement:
+          Type: Signature
+          Rule: "OR('GoodLifeMSP.member')"
+    AnchorPeers:
+      - Host: peer0.insurance.com
+        Port: 7051
+
+  - &Org4
+    Name: LifeMedicine
+    ID: LifeMedicineMSP
+    MSPDir: ./crypto-config/peerOrganizations/epharma.com/msp
+    Policies: &LifeMedicinePolicies
+      Readers:
+          Type: Signature
+        #   Rule: "OR('AcmeMSP.admin', 'AcmeMSP.peer', 'AcmeMSP.client')"
+          Rule: "OR('LifeMedicineMSP.member')"
+      Writers:
+          Type: Signature
+        #   Rule: "OR('AcmeMSP.admin', 'AcmeMSP.client')"
+          Rule: "OR('LifeMedicineMSP.member')"
+      Admins:
+          Type: Signature
+          Rule: "OR('LifeMedicineMSP.member')"
+      Endorsement:
+          Type: Signature
+          Rule: "OR('LifeMedicineMSP.member')"
+    AnchorPeers:
+      - Host: peer0.epharma.com
+        Port: 7051
+
+  - &Org5
+    Name: LifeHospital
+    ID: LifeHospitalMSP
+    MSPDir: ./crypto-config/peerOrganizations/ehospital.com/msp
+    Policies: &LifeHospitalPolicies
+      Readers:
+          Type: Signature
+        #   Rule: "OR('AcmeMSP.admin', 'AcmeMSP.peer', 'AcmeMSP.client')"
+          Rule: "OR('LifeHospitalMSP.member')"
+      Writers:
+          Type: Signature
+        #   Rule: "OR('AcmeMSP.admin', 'AcmeMSP.client')"
+          Rule: "OR('LifeHospitalMSP.member')"
+      Admins:
+          Type: Signature
+          Rule: "OR('LifeHospitalMSP.member')"
+      Endorsement:
+          Type: Signature
+          Rule: "OR('LifeHospitalMSP.member')"
+    AnchorPeers:
+      - Host: peer0.ehospital.com
+        Port: 7051
+
+  - &Org6
+    Name: LifeLab
+    ID: LifeLabMSP
+    MSPDir: ./crypto-config/peerOrganizations/elab.com/msp
+    Policies: &LifeLabPolicies
+      Readers:
+          Type: Signature
+        #   Rule: "OR('AcmeMSP.admin', 'AcmeMSP.peer', 'AcmeMSP.client')"
+          Rule: "OR('LifeLabMSP.member')"
+      Writers:
+          Type: Signature
+        #   Rule: "OR('AcmeMSP.admin', 'AcmeMSP.client')"
+          Rule: "OR('LifeLabMSP.member')"
+      Admins:
+          Type: Signature
+          Rule: "OR('LifeLabMSP.member')"
+      Endorsement:
+          Type: Signature
+          Rule: "OR('LifeLabMSP.member')"
+    AnchorPeers:
+      - Host: peer0.elab.com
+        Port: 7051                  
+
+
+  
+#   ORDERER
+Orderer: &OrdererDefaults
+
+  OrdererType: etcdraft
+
+  Addresses:
+    - orderer.healthcare.com:7050
+    - orderer2.healthcare.com:7050
+    - orderer3.healthcare.com:7050
+    - orderer4.healthcare.com:7050
+    - orderer5.healthcare.com:7050
+
+  # Policies for Orderer
+  Policies:
+    Readers:
+        Type: ImplicitMeta
+        Rule: "ANY Readers"
+    Writers:
+        Type: ImplicitMeta
+        Rule: "ANY Writers"
+    Admins:
+        Type: ImplicitMeta  
+        # UPDATED December 15, 2019
+        Rule: "ANY Admins"
+        # Rule: "MAJORITY Admins"
+
+    # BlockValidation specifies what signatures must be included in the block
+    # from the orderer for the peer to validate it.
+    BlockValidation:
+        Type: ImplicitMeta
+        Rule: "ANY Writers"
+
+  
+  EtcdRaft:
+      # The set of Raft replicas for this network. For the etcd/raft-based
+      # implementation, we expect every replica to also be an OSN. Therefore,
+      # a subset of the host:port items enumerated in this list should be
+      # replicated under the Orderer.Addresses key above.
+      Consenters:
+          - Host: orderer.healthcare.com
+            Port: 7050
+            # Same cert is being used for client and server - for higher level of security you may use different certs
+            ClientTLSCert: ../config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer.healthcare.com/tls/server.crt
+            ServerTLSCert: ../config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer.healthcare.com/tls/server.crt
+
+          - Host: orderer2.healthcare.com
+            Port: 7050
+            ClientTLSCert: ../config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer2.healthcare.com/tls/server.crt
+            ServerTLSCert: ../config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer2.healthcare.com/tls/server.crt
+
+          - Host: orderer3.healthcare.com
+            Port: 7050
+            ClientTLSCert: ../config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer3.healthcare.com/tls/server.crt
+            ServerTLSCert: ../config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer3.healthcare.com/tls/server.crt
+
+          # Additional Orderers go here
+          - Host: orderer4.healthcare.com
+            Port: 7050
+            ClientTLSCert: ../config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer4.healthcare.com/tls/server.crt
+            ServerTLSCert: ../config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer4.healthcare.com/tls/server.crt
+            
+          - Host: orderer5.healthcare.com
+            Port: 7050
+            ClientTLSCert: ../config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer5.healthcare.com/tls/server.crt
+            ServerTLSCert: ../config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer5.healthcare.com/tls/server.crt
+      # Options to be specified for all the etcd/raft nodes. The values here
+      # are the defaults for all new channels and can be modified on a
+      # per-channel basis via configuration updates.
+      Options:
+          # TickInterval is the time interval between two Node.Tick invocations.
+          TickInterval: 500ms
+
+          # ElectionTick is the number of Node.Tick invocations that must pass
+          # between elections. That is, if a follower does not receive any
+          # message from the leader of current term before ElectionTick has
+          # elapsed, it will become candidate and start an election.
+          # ElectionTick must be greater than HeartbeatTick.
+          ElectionTick: 10
+
+          # HeartbeatTick is the number of Node.Tick invocations that must
+          # pass between heartbeats. That is, a leader sends heartbeat
+          # messages to maintain its leadership every HeartbeatTick ticks.
+          HeartbeatTick: 1
+
+          # MaxInflightBlocks limits the max number of in-flight append messages
+          # during optimistic replication phase.
+          MaxInflightBlocks: 5
+
+          # SnapshotIntervalSize defines number of bytes per which a snapshot is taken
+          SnapshotIntervalSize: 20 MB
+  # Batch Timeout: The amount of time to wait before creating a batch
+  BatchTimeout: 2s
+
+  # Batch Size: Controls the number of messages batched into a block
+  BatchSize:
+    MaxMessageCount: 10
+    AbsoluteMaxBytes: 98 MB
+    PreferredMaxBytes: 512 KB
+
+
+Application: &ApplicationDefaults
+
+  
+  # Default policies
+  Policies: &ApplicationDefaultPolicies
+
+    # approveformyorg
+    LifecycleEndorsement:
+        Type: ImplicitMeta
+        # Rule: "MAJORITY Endorsement"
+        Rule: "ANY Endorsement"
+    
+    # --channel-config-policy
+    Endorsement:
+        Type: ImplicitMeta
+        Rule: "MAJORITY Endorsement"
+    Readers:
+        Type: ImplicitMeta
+        Rule: "ANY Readers"
+    Writers:
+        Type: ImplicitMeta
+        Rule: "ANY Writers"
+    Admins:
+        Type: ImplicitMeta
+        Rule: "MAJORITY Admins"
+
+
+  Organizations:
+ 
+
+#   CHANNEL
+Channel: &ChannelDefaults
+  Policies:
+    Readers:
+        Type: ImplicitMeta
+        Rule: "ANY Readers"
+    Writers:
+        Type: ImplicitMeta
+        Rule: "ANY Writers"
+    Admins:
+        Type: ImplicitMeta
+        Rule: "MAJORITY Admins"
+ 
+#   PROFILES
+Profiles:
+
+  HealthcareOrdererGenesis:
+      <<: *ChannelDefaults
+      Orderer:
+          <<: *OrdererDefaults
+          Organizations:
+              - <<: *Orderer
+      Consortiums:
+        HealthcareConsortium:   
+            Organizations:
+                  - <<: *Org1
+                  - <<: *Org2
+                  - <<: *Org3
+                  - <<: *Org4
+                  - <<: *Org5
+                  - <<: *Org6
+
+      Application:
+            <<: *ApplicationDefaults
+
+            Organizations:
+                - <<: *Org1
+                - <<: *Org2
+                - <<: *Org3
+                - <<: *Org4
+                - <<: *Org5
+                - <<: *Org6
+
+
+                  
+  HealthcareChannel:
+    <<: *ChannelDefaults
+    Consortium: HealthcareConsortium
+        
+    Application:
+        <<: *ApplicationDefaults
+        
+        Organizations:
+            - <<: *Org1
+            - <<: *Org2
+            - <<: *Org3
+            - <<: *Org4
+            - <<: *Org5
+            - <<: *Org6
+
+          
+
+          
+
+
+

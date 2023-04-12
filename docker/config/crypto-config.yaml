@@ -1,0 +1,88 @@
+# Defines two organizations
+#  - Orderer organization
+#  - Org1  = Single peer organization
+#    Uses the "Specs" to declare the peers instead of Template
+
+##### Orderer for acme
+OrdererOrgs:
+  - Name: orderer
+    Domain: healthcare.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: orderer
+        SANS:
+          - localhost
+      - Hostname: orderer2
+        SANS:
+          - localhost
+      - Hostname: orderer3
+        SANS:
+          - localhost
+      - Hostname: orderer4
+        SANS:
+          - localhost
+      - Hostname: orderer5
+        SANS:
+          - localhost
+    CA:
+      Hostname: ca
+      CommonName: "ca-orderer.healthcare.com"    
+#### Peers for acme
+PeerOrgs:
+  # Peer configuration for ACME
+  - Name: bojack
+    Domain: patient.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: peer0
+        CommonName: peer0.patient.com
+        SANS:
+          - localhost
+    Users:
+      Count: 0
+    CA:
+      Hostname: ca
+      CommonName: "ca-patient.com"
+  - Name: newlife
+    Domain: healthcare.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: peer0
+        CommonName: peer0.healthcare.com
+        SANS:
+          - localhost
+    Users:
+      Count: 0
+    CA:
+      Hostname: ca
+      CommonName: "ca-healthcare.com"
+  - Name: goodlife
+    Domain: insurance.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: peer0
+        CommonName: peer0.insurance.com
+        SANS:
+          - localhost
+    Users:
+      Count: 0
+    CA:
+      Hostname: ca
+      CommonName: "ca-insurance.com"
+  - Name: lifemedicine
+    Domain: epharma.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: peer0
+        CommonName: peer0.epharma.com
+        SANS:
+          - localhost
+    Users:
+      Count: 0
+    CA:
+      Hostname: ca
+      CommonName: "ca-epharma.com"
+
+
+
+      

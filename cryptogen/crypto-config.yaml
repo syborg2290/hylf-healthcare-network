@@ -1,0 +1,73 @@
+# Defines two organizations
+#  - Orderer organization
+#  - Org1  = Single peer organization
+#    Uses the "Specs" to declare the peers instead of Template
+
+##### Orderer for acme
+OrdererOrgs:
+  - Name: Orderer
+    Domain: healthcare.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: orderer
+      - Hostname: orderer2
+      - Hostname: orderer3
+      - Hostname: orderer4
+      - Hostname: orderer5
+      
+#### Peers for acme
+PeerOrgs:
+  # Peer configuration for ACME
+  - Name: Bojack
+    Domain: patient.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: peer0
+        CommonName: peer0
+    Users:
+      Count: 0
+  - Name: NewLife
+    Domain: healthcare.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: peer0
+        CommonName: peer0
+    Users:
+      Count: 0
+  - Name: GoodLife
+    Domain: insurance.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: peer0
+        CommonName: peer0
+    Users:
+      Count: 0
+  - Name: LifeMedicine
+    Domain: epharma.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: peer0
+        CommonName: peer0
+    Users:
+      Count: 0
+  - Name: LifeHospital
+    Domain: ehospital.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: peer0
+        CommonName: peer0
+    Users:
+      Count: 0
+  - Name: LifeLab
+    Domain: elab.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: peer0
+        CommonName: peer0
+    Users:
+      Count: 0         
+
+
+
+
+      

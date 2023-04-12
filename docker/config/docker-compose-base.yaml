@@ -1,0 +1,482 @@
+# Compose file for launching the test setup with
+# a Peer for Acme and a Peer for Budget
+
+version: '2'
+
+networks:
+  healthcare:
+
+# Storage outside the containers
+volumes:
+  data-orderer.healthcare.com:
+  data-orderer2.healthcare.com:
+  data-orderer3.healthcare.com:
+  data-orderer4.healthcare.com:
+  data-orderer5.healthcare.com:
+  data-peer0.patient.com:
+  data-peer0.healthcare.com:
+  data-peer0.insurance.com:
+  data-peer0.epharma.com:
+
+services:
+
+  # Orderer service
+  orderer.healthcare.com:
+    container_name: orderer.healthcare.com
+    image: hyperledger/fabric-orderer:2.2
+    command: orderer
+    # Override environment variables for orderer in this section
+    environment:
+      - FABRIC_CFG_PATH=/var/hyperledger/config
+      - FABRIC_LOGGING_SPEC=DEBUG
+
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/tls/ca.crt]
+      - ORDERER_GENERAL_TLS_CLIENTAUTHREQUIRED=false
+
+        # RAFT related setup
+      - ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/var/hyperledger/tls/server.crt
+      - ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY=/var/hyperledger/tls/server.key
+      - ORDERER_GENERAL_CLUSTER_ROOTCAS=[/var/hyperledger/tls/ca.crt]
+
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_LISTENPORT=7050
+      - ORDERER_GENERAL_GENESISMETHOD=file
+      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/config/healthcare-genesis.block
+      - ORDERER_GENERAL_LOCALMSPID=ordererMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/config/msp
+      # enabled TLS
+
+    # Host folder mappings
+    volumes:
+    # Folder with genesis block
+    - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/orderer:/var/hyperledger/config
+    # Map the folder with MSP for orderer
+    - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer.healthcare.com/msp:/var/hyperledger/config/msp
+    # Added to support the TLS setup
+    - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer.healthcare.com/tls:/var/hyperledger/tls
+    - data-orderer.healthcare.com:/var/ledger
+    ports:
+      - 7050:7050
+    networks:
+      - healthcare
+
+  orderer2.healthcare.com:
+    container_name: orderer2.healthcare.com
+    image: hyperledger/fabric-orderer:2.2
+    command: orderer
+    # Override environment variables for orderer in this section
+    environment:
+      - FABRIC_CFG_PATH=/var/hyperledger/config
+      - FABRIC_LOGGING_SPEC=DEBUG
+      # TLS Setup
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/tls/ca.crt]
+      - ORDERER_GENERAL_TLS_CLIENTAUTHREQUIRED=false
+
+      # RAFT related setup
+      - ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/var/hyperledger/tls/server.crt
+      - ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY=/var/hyperledger/tls/server.key
+      - ORDERER_GENERAL_CLUSTER_ROOTCAS=[/var/hyperledger/tls/ca.crt]
+      
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_LISTENPORT=7050
+      - ORDERER_GENERAL_GENESISMETHOD=file
+      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/config/healthcare-genesis.block
+      - ORDERER_GENERAL_LOCALMSPID=ordererMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/config/msp
+      # enabled TLS
+
+    # Host folder mappings
+    volumes:
+    # Folder with genesis block
+    - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/orderer:/var/hyperledger/config
+    # Map the folder with MSP for orderer
+    - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer2.healthcare.com/msp:/var/hyperledger/config/msp
+    # Added to support the TLS setup
+    - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer2.healthcare.com/tls:/var/hyperledger/tls
+    - data-orderer2.healthcare.com:/var/ledger
+    ports:
+      - 8050:7050
+    networks:
+      - healthcare
+
+  # Orderer3 service
+  orderer3.healthcare.com:
+    container_name: orderer3.healthcare.com
+    image: hyperledger/fabric-orderer:2.2
+    command: orderer
+    # Override environment variables for orderer in this section
+    environment:
+      - FABRIC_CFG_PATH=/var/hyperledger/config
+      - FABRIC_LOGGING_SPEC=DEBUG
+      # TLS Setup
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/tls/ca.crt]
+      - ORDERER_GENERAL_TLS_CLIENTAUTHREQUIRED=false
+
+      # RAFT related setup
+      - ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/var/hyperledger/tls/server.crt
+      - ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY=/var/hyperledger/tls/server.key
+      - ORDERER_GENERAL_CLUSTER_ROOTCAS=[/var/hyperledger/tls/ca.crt]
+
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_LISTENPORT=7050
+      - ORDERER_GENERAL_GENESISMETHOD=file
+      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/config/healthcare-genesis.block
+      - ORDERER_GENERAL_LOCALMSPID=ordererMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/config/msp
+      # enabled TLS
+    # Host folder mappings
+    volumes:
+    # Folder with genesis block
+    - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/orderer:/var/hyperledger/config
+    # Map the folder with MSP for orderer
+    - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer3.healthcare.com/msp:/var/hyperledger/config/msp
+    # Added to support the TLS setup
+    - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer3.healthcare.com/tls:/var/hyperledger/tls
+    - data-orderer3.healthcare.com:/var/ledger
+    ports:
+      - 9050:7050
+    networks:
+      - healthcare
+
+  orderer4.healthcare.com:
+    container_name: orderer4.healthcare.com
+    image: hyperledger/fabric-orderer:2.2
+    command: orderer
+    # Override environment variables for orderer in this section
+    environment:
+      - FABRIC_CFG_PATH=/var/hyperledger/config
+      - FABRIC_LOGGING_SPEC=DEBUG
+      # TLS Setup
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/tls/ca.crt]
+      - ORDERER_GENERAL_TLS_CLIENTAUTHREQUIRED=false
+
+      - ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/var/hyperledger/tls/server.crt
+      - ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY=/var/hyperledger/tls/server.key
+      - ORDERER_GENERAL_CLUSTER_ROOTCAS=[/var/hyperledger/tls/ca.crt]
+
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_LISTENPORT=7050
+      - ORDERER_GENERAL_GENESISMETHOD=file
+      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/config/healthcare-genesis.block
+      - ORDERER_GENERAL_LOCALMSPID=ordererMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/config/msp
+      # enabled TLS
+    
+      # RAFT related setup
+      # <<< SETUP the appropriate properties Here >>>
+
+    # Host folder mappings
+    volumes:
+    # Folder with genesis block
+    - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/orderer:/var/hyperledger/config
+    # Map the folder with MSP for orderer
+    - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer4.healthcare.com/msp:/var/hyperledger/config/msp
+    # Added to support the TLS setup
+    - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer4.healthcare.com/tls:/var/hyperledger/tls
+    - data-orderer4.healthcare.com:/var/ledger
+    ports:
+      - 10050:7050
+    networks:
+      - healthcare
+
+  # Orderer5 service
+  orderer5.healthcare.com:
+    container_name: orderer5.healthcare.com
+    image: hyperledger/fabric-orderer:2.2
+    command: orderer
+    # Override environment variables for orderer in this section
+    environment:
+      - FABRIC_CFG_PATH=/var/hyperledger/config
+      - FABRIC_LOGGING_SPEC=DEBUG
+      # TLS Setup
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/tls/ca.crt]
+      - ORDERER_GENERAL_TLS_CLIENTAUTHREQUIRED=false
+
+      - ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/var/hyperledger/tls/server.crt
+      - ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY=/var/hyperledger/tls/server.key
+      - ORDERER_GENERAL_CLUSTER_ROOTCAS=[/var/hyperledger/tls/ca.crt]
+      
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_LISTENPORT=7050
+      - ORDERER_GENERAL_GENESISMETHOD=file
+      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/config/healthcare-genesis.block
+      - ORDERER_GENERAL_LOCALMSPID=ordererMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/config/msp
+      # RAFT related setup
+      # <<< SETUP the appropriate properties Here >>>
+
+    # Host folder mappings
+    volumes:
+    # Folder with genesis block
+    - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/orderer:/var/hyperledger/config
+    # Map the folder with MSP for orderer
+    - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer5.healthcare.com/msp:/var/hyperledger/config/msp
+    # Added to support the TLS setup
+    - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer5.healthcare.com/tls:/var/hyperledger/tls
+    - data-orderer5.healthcare.com:/var/ledger
+    ports:
+      - 11050:7050
+    networks:
+      - healthcare
+  # Acme peer1
+
+  peer0.patient.com:
+    container_name: peer0.patient.com
+    image: hyperledger/fabric-peer:2.2
+    # Override variables in this section
+    environment:
+      - FABRIC_CFG_PATH=/var/hyperledger/config
+      - FABRIC_LOGGING_SPEC=DEBUG
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock      
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=config_healthcare
+
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_PROFILE_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/var/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/var/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/var/hyperledger/fabric/tls/ca.crt
+      # Peer specific variabes
+      - CORE_PEER_ID=peer0.patient.com                               #
+      - CORE_PEER_ADDRESS=peer0.patient.com:7051                       #
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051                                
+      - CORE_PEER_CHAINCODEADDRESS=peer0.patient.com:7052              #
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052                      
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.patient.com:7051              #
+      - CORE_PEER_GOSSIP_ENDPOINT=peer0.patient.com:7051              #
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.patient.com:7051       #
+      - CORE_PEER_LOCALMSPID=bojackMSP                                        #
+      - CORE_PEER_FILESYSTEMPATH=/var/hyperledger/fabric/production
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+
+    # Start the peer node
+    command: peer node start
+    # Host folder mappings
+    volumes:
+      # Folder with channel create tx file
+      - /var/run/docker.sock:/host/var/run/docker.sock
+      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/patient:/var/hyperledger/config
+      # Map the folder with MSP for Peer
+      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/peerOrganizations/patient.com/peers/peer0.patient.com/msp:/var/hyperledger/config/msp
+      # Added to support the TLS setup
+      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/peerOrganizations/patient.com/peers/peer0.patient.com/tls:/var/hyperledger/fabric/tls
+      - /var/run/:/var/run/
+      - data-peer0.patient.com:/var/hyperledger/production
+    depends_on: 
+      - orderer.healthcare.com
+    # Map the ports on Host VM to container ports
+    ports:
+      - 7051:7051
+      - 7052:7052
+    networks:
+      - healthcare
+
+  # Budget peer1
+  peer0.healthcare.com:
+    container_name: peer0.healthcare.com
+    image: hyperledger/fabric-peer:2.2
+    # landing directory
+    working_dir: $HOME
+    # command: peer node start --peer-chaincodedev=true
+    command: peer node start
+    # Environment setup for peer
+    environment:
+      - FABRIC_CFG_PATH=/var/hyperledger/config
+      - FABRIC_LOGGING_SPEC=DEBUG
+      - GOPATH=/opt/gopath
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=config_healthcare
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.patient.com:7051
+
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_PROFILE_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/var/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/var/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/var/hyperledger/fabric/tls/ca.crt
+      # Peer specific variabes
+      - CORE_PEER_ID=peer0.healthcare.com                               #
+      - CORE_PEER_ADDRESS=peer0.healthcare.com:7051                       #
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051                                
+      - CORE_PEER_CHAINCODEADDRESS=peer0.healthcare.com:7052              #
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052                      
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.healthcare.com:7051              #
+      - CORE_PEER_GOSSIP_ENDPOINT=peer0.healthcare.com:7051              #
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.healthcare.com:7051       #
+      - CORE_PEER_LOCALMSPID=newlifeMSP                                        #
+      - CORE_PEER_FILESYSTEMPATH=/var/hyperledger/fabric/production
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+
+    # host file system mappings
+    volumes:
+      # Folder with channel create tx file
+      - /var/run/docker.sock:/host/var/run/docker.sock      
+      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/healthcare:/var/hyperledger/config
+      # Map the folder with MSP for Peer
+      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/peerOrganizations/healthcare.com/peers/peer0.healthcare.com/msp:/var/hyperledger/config/msp
+      # Added to support the TLS setup
+      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/peerOrganizations/healthcare.com/peers/peer0.healthcare.com/tls:/var/hyperledger/fabric/tls
+      - /var/run/:/var/run/
+      - data-peer0.healthcare.com:/var/hyperledger/production
+    depends_on: 
+      - orderer.healthcare.com
+    # Map the ports on Host VM to container ports
+    ports:
+      - 8051:7051
+      - 8052:7052
+    networks:
+      - healthcare
+
+  # Tools container used for managing peers
+  tools:
+    container_name: tools
+    command: /bin/bash
+
+    # Tools container image
+    image: hyperledger/fabric-tools:2.2
+
+    tty: true
+    stdin_open: true
+    environment:
+      - GOPATH=/opt/gopath
+      - FABRIC_CFG_PATH=/var/hyperledger/config
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - FABRIC_LOGGING_SPEC=DEBUG
+    # This is the working directory on login
+    working_dir: /opt/scripts
+    volumes:
+      # Mapping for the sample chaincode folders
+      - /Users/aj007/hyp/fabric-samples/healthcare/docker/artefacts/nodechaincode:/opt/nodechaincode
+      - /Users/aj007/hyp/fabric-samples/healthcare/docker/gopath:/opt/gopath
+      # Folder with channel create tx file
+      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config:/var/hyperledger/config
+      # Map the folder to root of all Fabric CA Client crypto
+      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/peerOrganizations:/var/hyperledger/crypto
+      # VM docker stream folder mapping
+      - /var/run/:/host/var/run/
+      # Map the bins folder
+      - ${PWD}/tool-bins:/opt/scripts
+    networks:
+      - healthcare
+  
+  peer0.insurance.com:
+    container_name: peer0.insurance.com
+    image: hyperledger/fabric-peer:2.2
+    # landing directory
+    working_dir: $HOME
+    # command: peer node start --peer-chaincodedev=true
+    command: peer node start
+    # Environment setup for peer
+    environment:
+      - FABRIC_CFG_PATH=/var/hyperledger/config
+      - FABRIC_LOGGING_SPEC=DEBUG
+      - GOPATH=/opt/gopath
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=config_healthcare
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.patient.com:7051
+
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_PROFILE_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/var/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/var/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/var/hyperledger/fabric/tls/ca.crt
+      # Peer specific variabes
+      - CORE_PEER_ID=peer0.insurance.com                               #
+      - CORE_PEER_ADDRESS=peer0.insurance.com:7051                       #
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051                                
+      - CORE_PEER_CHAINCODEADDRESS=peer0.insurance.com:7052              #
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052                      
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.insurance.com:7051              #
+      - CORE_PEER_GOSSIP_ENDPOINT=peer0.insurance.com:7051              #
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.insurance.com:7051       #
+      - CORE_PEER_LOCALMSPID=goodlifeMSP                                        #
+      - CORE_PEER_FILESYSTEMPATH=/var/hyperledger/fabric/production
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+
+    # host file system mappings
+    volumes:
+      # Folder with channel create tx file
+      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/insurance:/var/hyperledger/config
+      - /var/run/docker.sock:/host/var/run/docker.sock
+              # Map the folder with MSP for Peer
+      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/peerOrganizations/insurance.com/peers/peer0.insurance.com/msp:/var/hyperledger/config/msp
+      # Added to support the TLS setup
+      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/peerOrganizations/insurance.com/peers/peer0.insurance.com/tls:/var/hyperledger/fabric/tls
+      - /var/run/:/var/run/
+      - data-peer0.insurance.com:/var/hyperledger/production
+    depends_on: 
+      - orderer.healthcare.com
+    # Map the ports on Host VM to container ports
+    ports:
+      - 9051:7051
+      - 9052:7052
+    networks:
+      - healthcare
+  
+  peer0.epharma.com:
+    container_name: peer0.epharma.com
+    image: hyperledger/fabric-peer:2.2
+    # landing directory
+    working_dir: $HOME
+    # command: peer node start --peer-chaincodedev=true
+    command: peer node start
+    # Environment setup for peer
+    environment:
+      - FABRIC_CFG_PATH=/var/hyperledger/config
+      - FABRIC_LOGGING_SPEC=DEBUG
+      - GOPATH=/opt/gopath
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=config_healthcare
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.patient.com:7051
+
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_PROFILE_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/var/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/var/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/var/hyperledger/fabric/tls/ca.crt
+      # Peer specific variabes
+      - CORE_PEER_ID=peer0.epharma.com                               #
+      - CORE_PEER_ADDRESS=peer0.epharma.com:7051                       #
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051                                
+      - CORE_PEER_CHAINCODEADDRESS=peer0.epharma.com:7052              #
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052                      
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.epharma.com:7051              #
+      - CORE_PEER_GOSSIP_ENDPOINT=peer0.epharma.com:7051              #
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.epharma.com:7051       #
+      - CORE_PEER_LOCALMSPID=lifemedicineMSP                                        #
+      - CORE_PEER_FILESYSTEMPATH=/var/hyperledger/fabric/production
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+
+    # host file system mappings
+    volumes:
+      # Folder with channel create tx file
+      - /var/run/docker.sock:/host/var/run/docker.sock
+      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/epharma:/var/hyperledger/config
+      # Map the folder with MSP for Peer
+      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/peerOrganizations/epharma.com/peers/peer0.epharma.com/msp:/var/hyperledger/config/msp
+      # Added to support the TLS setup
+      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/peerOrganizations/epharma.com/peers/peer0.epharma.com/tls:/var/hyperledger/fabric/tls
+      - /var/run/:/var/run/
+      - data-peer0.epharma.com:/var/hyperledger/production
+    depends_on: 
+      - orderer.healthcare.com
+    # Map the ports on Host VM to container ports
+    ports:
+      - 10051:7051
+      - 10052:7052
+    networks:
+      - healthcare
+  

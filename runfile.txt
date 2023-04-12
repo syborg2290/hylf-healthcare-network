@@ -1,0 +1,102 @@
+cd /Users/aj007/hyp/fabric-samples/healthcare/docker/config
+
+cryptogen generate --config=./crypto-config.yaml
+export FABRIC_CFG_PATH=$PWD
+
+configtxgen -profile HealthcareOrdererGenesis -outputBlock ./healthcare-genesis.block -channelID ordererchannel
+
+configtxgen -profile HealthcareChannel -outputCreateChannelTx ./healthcare-channel.tx -channelID healthcarechannel
+
+docker-compose -f ./docker-compose-base.yaml up -d 
+
+
+
+export FABRIC_CFG_PATH=$PWD/patient
+export CORE_PEER_TLS_ENABLED=true
+export CORE_PEER_LOCALMSPID="bojackMSP"
+export CORE_PEER_TLS_ROOTCERT_FILE=/Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/peerOrganizations/patient.com/peers/peer0.patient.com/tls/ca.crt
+export CORE_PEER_MSPCONFIGPATH=/Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/peerOrganizations/patient.com/users/Admin@patient.com/msp
+export CORE_PEER_ADDRESS=0.0.0.0:7051 
+
+
+peer channel create -o 0.0.0.0:7050  --ordererTLSHostnameOverride orderer.healthcare.com -c healthcarechannel -f healthcare-channel.tx --outputBlock channel1.block --tls --cafile ${PWD}/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer.healthcare.com/msp/tlscacerts/tlsca-orderer.healthcare.com-cert.pem
+
+docker exec -it tools bash
+cd /var/hyperledger/config
+
+export FABRIC_CFG_PATH=$PWD/patient
+
+export CORE_PEER_TLS_ENABLED=true
+export CORE_PEER_LOCALMSPID="bojackMSP"
+export CORE_PEER_ADDRESS=peer0.patient.com:7051 
+export CORE_PEER_MSPCONFIGPATH=/var/hyperledger/config/crypto-config/peerOrganizations/patient.com/users/Admin@patient.com/msp
+export CORE_PEER_TLS_ROOTCERT_FILE=/var/hyperledger/config/crypto-config/peerOrganizations/patient.com/peers/peer0.patient.com/tls/ca.crt
+
+
+peer channel join -b channel1.block
+
+peer channel getinfo -c healthcarechannel
+
+
+export CORE_PEER_TLS_ENABLED=true
+export CORE_PEER_LOCALMSPID="newlifeMSP"
+export CORE_PEER_ADDRESS=peer0.healthcare.com:7051 
+export CORE_PEER_MSPCONFIGPATH=/var/hyperledger/config/crypto-config/peerOrganizations/healthcare.com/users/Admin@healthcare.com/msp
+export CORE_PEER_TLS_ROOTCERT_FILE=/var/hyperledger/config/crypto-config/peerOrganizations/healthcare.com/peers/peer0.healthcare.com/tls/ca.crt
+
+peer channel fetch 0 ./channel_healthcare.block -o orderer.healthcare.com:7050 --ordererTLSHostnameOverride orderer.healthcare.com -c healthcarechannel --tls --cafile ${PWD}/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer.healthcare.com/msp/tlscacerts/tlsca-orderer.healthcare.com-cert.pem
+
+peer channel join -b ./channel_healthcare.block
+
+
+export CORE_PEER_TLS_ENABLED=true
+export CORE_PEER_LOCALMSPID="goodlifeMSP"
+export CORE_PEER_ADDRESS=peer0.insurance.com:7051 
+export CORE_PEER_MSPCONFIGPATH=/var/hyperledger/config/crypto-config/peerOrganizations/insurance.com/users/Admin@insurance.com/msp
+export CORE_PEER_TLS_ROOTCERT_FILE=/var/hyperledger/config/crypto-config/peerOrganizations/insurance.com/peers/peer0.insurance.com/tls/ca.crt
+
+
+export CORE_PEER_TLS_ENABLED=true
+export CORE_PEER_LOCALMSPID="lifemedicineMSP"
+export CORE_PEER_ADDRESS=peer0.epharma.com:7051 
+export CORE_PEER_MSPCONFIGPATH=/var/hyperledger/config/crypto-config/peerOrganizations/epharma.com/users/Admin@epharma.com/msp
+export CORE_PEER_TLS_ROOTCERT_FILE=/var/hyperledger/config/crypto-config/peerOrganizations/epharma.com/peers/peer0.epharma.com/tls/ca.crt
+
+peer channel getinfo -c healthcarechannel
+
+peer lifecycle chaincode package healthcare.tar.gz --path ../../contract --lang golang --label healthcare_1.0
+
+peer lifecycle chaincode install healthcare.tar.gz
+
+peer lifecycle chaincode queryinstalled
+
+export CC_PACKAGE_ID=healthcare_1.0:ff341cc281e940e1b70850cb83f14f5b6fb6f8ba6f2ae71961bf79aa1832505c
+
+peer lifecycle chaincode approveformyorg -o orderer.healthcare.com:7050 --ordererTLSHostnameOverride orderer.healthcare.com --channelID healthcarechannel --name healthcare --version 1.0 --package-id $CC_PACKAGE_ID --sequence 1 --tls --cafile ${PWD}/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer.healthcare.com/msp/tlscacerts/tlsca-orderer.healthcare.com-cert.pem
+
+peer lifecycle chaincode checkcommitreadiness --channelID healthcarechannel --name healthcare --version 1.0 --sequence 1 --tls --cafile ${PWD}/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer.healthcare.com/msp/tlscacerts/tlsca-orderer.healthcare.com-cert.pem --output json
+
+peer lifecycle chaincode commit -o orderer.healthcare.com:7050 --ordererTLSHostnameOverride orderer.healthcare.com --channelID healthcarechannel --name healthcare --version 1.0 --sequence 1 --tls --cafile ${PWD}/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer.healthcare.com/msp/tlscacerts/tlsca-orderer.healthcare.com-cert.pem --peerAddresses peer0.patient.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/patient.com/peers/peer0.patient.com/tls/ca.crt --peerAddresses peer0.healthcare.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/healthcare.com/peers/peer0.healthcare.com/tls/ca.crt --peerAddresses peer0.insurance.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/insurance.com/peers/peer0.insurance.com/tls/ca.crt --peerAddresses peer0.epharma.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/epharma.com/peers/peer0.epharma.com/tls/ca.crt
+
+peer lifecycle chaincode querycommitted --channelID healthcarechannel --name healthcare --cafile {PWD}/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer.healthcare.com/msp/tlscacerts/tlsca-orderer.healthcare.com-cert.pem
+
+peer chaincode invoke -o orderer.healthcare.com:7050 --ordererTLSHostnameOverride orderer.healthcare.com --tls --cafile ${PWD}/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer.healthcare.com/msp/tlscacerts/tlsca-orderer.healthcare.com-cert.pem -C healthcarechannel -n healthcare --peerAddresses peer0.patient.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/patient.com/peers/peer0.patient.com/tls/ca.crt --peerAddresses peer0.healthcare.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/healthcare.com/peers/peer0.healthcare.com/tls/ca.crt --peerAddresses peer0.insurance.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/insurance.com/peers/peer0.insurance.com/tls/ca.crt --peerAddresses peer0.epharma.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/epharma.com/peers/peer0.epharma.com/tls/ca.crt -c '{"function":"InitLedger","Args":[]}'
+
+peer chaincode invoke -o 0.0.0.0:7050 --ordererTLSHostnameOverride orderer.healthcare.com --tls --cafile ${PWD}/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer.healthcare.com/msp/tlscacerts/tlsca-orderer.healthcare.com-cert.pem -C healthcarechannel -n healthcare --peerAddresses 0.0.0.0:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/patient.com/peers/peer0.patient.com/tls/ca.crt --peerAddresses 0.0.0.0:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/healthcare.com/peers/peer0.healthcare.com/tls/ca.crt --peerAddresses 0.0.0.0:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/insurance.com/peers/peer0.insurance.com/tls/ca.crt --peerAddresses 0.0.0.0:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/epharma.com/peers/peer0.epharma.com/tls/ca.crt -c '{"function":"InitLedger","Args":[]}'
+
+export CORE_PEER_CHAINCODEADDRESS=peer0.org1.example.com:7052
+export CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
+
+peer chaincode query -C healthcarechannel -n healthcare -c '{"Args":["readAsset","P1"]}'
+
+peer chaincode invoke -o orderer.healthcare.com:7050 --ordererTLSHostnameOverride orderer.healthcare.com --tls --cafile ${PWD}/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer.healthcare.com/msp/tlscacerts/tlsca-orderer.healthcare.com-cert.pem -C healthcarechannel -n healthcare --peerAddresses peer0.patient.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/patient.com/peers/peer0.patient.com/tls/ca.crt --peerAddresses peer0.healthcare.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/healthcare.com/peers/peer0.healthcare.com/tls/ca.crt --peerAddresses peer0.insurance.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/insurance.com/peers/peer0.insurance.com/tls/ca.crt --peerAddresses peer0.epharma.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/epharma.com/peers/peer0.epharma.com/tls/ca.crt -c '{"Args":["BookAppointment","P1","true","true"]}'
+peer chaincode invoke -o orderer.healthcare.com:7050 --ordererTLSHostnameOverride orderer.healthcare.com --tls --cafile ${PWD}/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer.healthcare.com/msp/tlscacerts/tlsca-orderer.healthcare.com-cert.pem -C healthcarechannel -n healthcare --peerAddresses peer0.patient.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/patient.com/peers/peer0.patient.com/tls/ca.crt --peerAddresses peer0.healthcare.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/healthcare.com/peers/peer0.healthcare.com/tls/ca.crt --peerAddresses peer0.insurance.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/insurance.com/peers/peer0.insurance.com/tls/ca.crt --peerAddresses peer0.epharma.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/epharma.com/peers/peer0.epharma.com/tls/ca.crt -c '{"Args":["ApproveAppointment","A1","D1"]}'
+peer chaincode invoke -o orderer.healthcare.com:7050 --ordererTLSHostnameOverride orderer.healthcare.com --tls --cafile ${PWD}/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer.healthcare.com/msp/tlscacerts/tlsca-orderer.healthcare.com-cert.pem -C healthcarechannel -n healthcare --peerAddresses peer0.patient.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/patient.com/peers/peer0.patient.com/tls/ca.crt --peerAddresses peer0.healthcare.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/healthcare.com/peers/peer0.healthcare.com/tls/ca.crt --peerAddresses peer0.insurance.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/insurance.com/peers/peer0.insurance.com/tls/ca.crt --peerAddresses peer0.epharma.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/epharma.com/peers/peer0.epharma.com/tls/ca.crt -c '{"Args":["ReadPatient","P1"]}'
+peer chaincode invoke -o orderer.healthcare.com:7050 --ordererTLSHostnameOverride orderer.healthcare.com --tls --cafile ${PWD}/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer.healthcare.com/msp/tlscacerts/tlsca-orderer.healthcare.com-cert.pem -C healthcarechannel -n healthcare --peerAddresses peer0.patient.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/patient.com/peers/peer0.patient.com/tls/ca.crt --peerAddresses peer0.healthcare.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/healthcare.com/peers/peer0.healthcare.com/tls/ca.crt --peerAddresses peer0.insurance.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/insurance.com/peers/peer0.insurance.com/tls/ca.crt --peerAddresses peer0.epharma.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/epharma.com/peers/peer0.epharma.com/tls/ca.crt -c '{"Args":["IssueEHR","A1","teeth removal","[]"]}'
+peer chaincode invoke -o orderer.healthcare.com:7050 --ordererTLSHostnameOverride orderer.healthcare.com --tls --cafile ${PWD}/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer.healthcare.com/msp/tlscacerts/tlsca-orderer.healthcare.com-cert.pem -C healthcarechannel -n healthcare --peerAddresses peer0.patient.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/patient.com/peers/peer0.patient.com/tls/ca.crt --peerAddresses peer0.healthcare.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/healthcare.com/peers/peer0.healthcare.com/tls/ca.crt --peerAddresses peer0.insurance.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/insurance.com/peers/peer0.insurance.com/tls/ca.crt --peerAddresses peer0.epharma.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/epharma.com/peers/peer0.epharma.com/tls/ca.crt -c '{"Args":["ReadAppointment","A1"]}'
+peer chaincode invoke -o orderer.healthcare.com:7050 --ordererTLSHostnameOverride orderer.healthcare.com --tls --cafile ${PWD}/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer.healthcare.com/msp/tlscacerts/tlsca-orderer.healthcare.com-cert.pem -C healthcarechannel -n healthcare --peerAddresses peer0.patient.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/patient.com/peers/peer0.patient.com/tls/ca.crt --peerAddresses peer0.healthcare.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/healthcare.com/peers/peer0.healthcare.com/tls/ca.crt --peerAddresses peer0.insurance.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/insurance.com/peers/peer0.insurance.com/tls/ca.crt --peerAddresses peer0.epharma.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/epharma.com/peers/peer0.epharma.com/tls/ca.crt -c '{"Args":["ReadEHR","EHR1"]}'
+peer chaincode invoke -o orderer.healthcare.com:7050 --ordererTLSHostnameOverride orderer.healthcare.com --tls --cafile ${PWD}/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer.healthcare.com/msp/tlscacerts/tlsca-orderer.healthcare.com-cert.pem -C healthcarechannel -n healthcare --peerAddresses peer0.patient.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/patient.com/peers/peer0.patient.com/tls/ca.crt --peerAddresses peer0.healthcare.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/healthcare.com/peers/peer0.healthcare.com/tls/ca.crt --peerAddresses peer0.insurance.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/insurance.com/peers/peer0.insurance.com/tls/ca.crt --peerAddresses peer0.epharma.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/epharma.com/peers/peer0.epharma.com/tls/ca.crt -c '{"Args":["PlaceOrder","EHR1",""]}'
+peer chaincode invoke -o orderer.healthcare.com:7050 --ordererTLSHostnameOverride orderer.healthcare.com --tls --cafile ${PWD}/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer.healthcare.com/msp/tlscacerts/tlsca-orderer.healthcare.com-cert.pem -C healthcarechannel -n healthcare --peerAddresses peer0.patient.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/patient.com/peers/peer0.patient.com/tls/ca.crt --peerAddresses peer0.healthcare.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/healthcare.com/peers/peer0.healthcare.com/tls/ca.crt --peerAddresses peer0.insurance.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/insurance.com/peers/peer0.insurance.com/tls/ca.crt --peerAddresses peer0.epharma.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/epharma.com/peers/peer0.epharma.com/tls/ca.crt -c '{"Args":["ReadOrder","O1"]}'
+peer chaincode invoke -o orderer.healthcare.com:7050 --ordererTLSHostnameOverride orderer.healthcare.com --tls --cafile ${PWD}/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer.healthcare.com/msp/tlscacerts/tlsca-orderer.healthcare.com-cert.pem -C healthcarechannel -n healthcare --peerAddresses peer0.patient.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/patient.com/peers/peer0.patient.com/tls/ca.crt --peerAddresses peer0.healthcare.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/healthcare.com/peers/peer0.healthcare.com/tls/ca.crt --peerAddresses peer0.insurance.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/insurance.com/peers/peer0.insurance.com/tls/ca.crt --peerAddresses peer0.epharma.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/epharma.com/peers/peer0.epharma.com/tls/ca.crt -c '{"Args":["CompleteOrder","O1"]}'
+peer chaincode invoke -o orderer.healthcare.com:7050 --ordererTLSHostnameOverride orderer.healthcare.com --tls --cafile ${PWD}/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer.healthcare.com/msp/tlscacerts/tlsca-orderer.healthcare.com-cert.pem -C healthcarechannel -n healthcare --peerAddresses peer0.patient.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/patient.com/peers/peer0.patient.com/tls/ca.crt --peerAddresses peer0.healthcare.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/healthcare.com/peers/peer0.healthcare.com/tls/ca.crt --peerAddresses peer0.insurance.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/insurance.com/peers/peer0.insurance.com/tls/ca.crt --peerAddresses peer0.epharma.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/epharma.com/peers/peer0.epharma.com/tls/ca.crt -c '{"Args":["RaiseBill","A1","500"]}'
+peer chaincode invoke -o orderer.healthcare.com:7050 --ordererTLSHostnameOverride orderer.healthcare.com --tls --cafile ${PWD}/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer.healthcare.com/msp/tlscacerts/tlsca-orderer.healthcare.com-cert.pem -C healthcarechannel -n healthcare --peerAddresses peer0.patient.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/patient.com/peers/peer0.patient.com/tls/ca.crt --peerAddresses peer0.healthcare.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/healthcare.com/peers/peer0.healthcare.com/tls/ca.crt --peerAddresses peer0.insurance.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/insurance.com/peers/peer0.insurance.com/tls/ca.crt --peerAddresses peer0.epharma.com:7051 --tlsRootCertFiles ${PWD}/crypto-config/peerOrganizations/epharma.com/peers/peer0.epharma.com/tls/ca.crt -c '{"Args":["ClearBill","A1"]}'

@@ -1,0 +1,267 @@
+
+# ORGANIZATIONS
+Organizations:
+  - &Orderer
+    Name: OrdererMSP
+    SkipAsForeign: false
+    ID: OrdererMSP
+    MSPDir: ./crypto-config/ordererOrganizations/healthcare.com/msp
+    Policies: &OrdererPolicies
+      Readers:
+          Type: Signature
+          Rule: "OR('OrdererMSP.member')"
+      Writers:
+          Type: Signature
+          Rule: "OR('OrdererMSP.member')"
+      Admins:
+          Type: Signature
+          Rule: "OR('OrdererMSP.member')"
+      Endorsement:
+          Type: Signature
+          Rule: "OR('OrdererMSP.member')"
+
+  - &Org1
+    Name: Bojack
+    ID: BojackMSP
+    MSPDir: ./crypto-config/peerOrganizations/patient.com/msp
+    Policies: &BojackPolicies
+      Readers:
+          Type: Signature
+          Rule: "OR('BojackMSP.member')"
+      Writers:
+          Type: Signature
+          Rule: "OR('BojackMSP.member')"
+      Admins:
+          Type: Signature
+          Rule: "OR('BojackMSP.member')"
+      Endorsement:
+          Type: Signature
+          Rule: "OR('BojackMSP.member')"
+    AnchorPeers:
+      - Host: peer0.patient.com
+        Port: 7051
+  - &Org2
+    Name: NewLife
+    ID: NewLifeMSP
+    MSPDir: ./crypto-config/peerOrganizations/healthcare.com/msp
+    Policies: &NewLifePolicies
+      Readers:
+          Type: Signature
+          Rule: "OR('NewLifeMSP.member')"
+      Writers:
+          Type: Signature
+          Rule: "OR('NewLifeMSP.member')"
+      Admins:
+          Type: Signature
+          Rule: "OR('NewLifeMSP.member')"
+      Endorsement:
+          Type: Signature
+          Rule: "OR('NewLifeMSP.member')"
+    AnchorPeers:
+      - Host: peer0.healthcare.com
+        Port: 8051
+  - &Org3
+    Name: GoodLife
+    ID: GoodLifeMSP
+    MSPDir: ./crypto-config/peerOrganizations/insurance.com/msp
+    Policies: &GoodLifePolicies
+      Readers:
+          Type: Signature
+          Rule: "OR('GoodLifeMSP.member')"
+      Writers:
+          Type: Signature
+          Rule: "OR('GoodLifeMSP.member')"
+      Admins:
+          Type: Signature
+          Rule: "OR('GoodLifeMSP.member')"
+      Endorsement:
+          Type: Signature
+          Rule: "OR('GoodLifeMSP.member')"
+    AnchorPeers:
+      - Host: peer0.insurance.com
+        Port: 9051
+  - &Org4
+    Name: LifeMedicine
+    ID: LifeMedicineMSP
+    MSPDir: ./crypto-config/peerOrganizations/epharma.com/msp
+    Policies: &LifeMedicinePolicies
+      Readers:
+          Type: Signature
+          Rule: "OR('LifeMedicineMSP.member')"
+      Writers:
+          Type: Signature
+          Rule: "OR('LifeMedicineMSP.member')"
+      Admins:
+          Type: Signature
+          Rule: "OR('LifeMedicineMSP.member')"
+      Endorsement:
+          Type: Signature
+          Rule: "OR('LifeMedicineMSP.member')"
+    AnchorPeers:
+      - Host: peer0.epharma.com
+        Port: 10051
+
+  - &Org5
+    Name: LifeHospital
+    ID: LifeHospitalMSP
+    MSPDir: ./crypto-config/peerOrganizations/ehospital.com/msp
+    Policies: &LifeHospitalPolicies
+      Readers:
+          Type: Signature
+          Rule: "OR('LifeHospitalMSP.member')"
+      Writers:
+          Type: Signature
+          Rule: "OR('LifeHospitalMSP.member')"
+      Admins:
+          Type: Signature
+          Rule: "OR('LifeHospitalMSP.member')"
+      Endorsement:
+          Type: Signature
+          Rule: "OR('LifeHospitalMSP.member')"
+    AnchorPeers:
+      - Host: peer0.ehospital.com
+        Port: 11051
+
+  - &Org6
+    Name: LifeLab
+    ID: LifeLabMSP
+    MSPDir: ./crypto-config/peerOrganizations/elab.com/msp
+    Policies: &LifeLabPolicies
+      Readers:
+          Type: Signature
+          Rule: "OR('LifeLabMSP.member')"
+      Writers:
+          Type: Signature
+          Rule: "OR('LifeLabMSP.member')"
+      Admins:
+          Type: Signature
+          Rule: "OR('LifeLabMSP.member')"
+      Endorsement:
+          Type: Signature
+          Rule: "OR('LifeLabMSP.member')"
+    AnchorPeers:
+      - Host: peer0.elab.com
+        Port: 12051                  
+
+
+  
+#   ORDERER
+Orderer: &OrdererDefaults
+
+  OrdererType: solo
+
+  Addresses:
+    - localhost:7050
+
+  # Policies for Orderer
+  Policies:
+    Readers:
+        Type: ImplicitMeta
+        Rule: "ANY Readers"
+    Writers:
+        Type: ImplicitMeta
+        Rule: "ANY Writers"
+    Admins:
+        Type: ImplicitMeta  
+        Rule: "ANY Admins"
+
+    # BlockValidation specifies what signatures must be included in the block
+    # from the orderer for the peer to validate it.
+    BlockValidation:
+        Type: ImplicitMeta
+        Rule: "ANY Writers"
+
+  # Batch Timeout: The amount of time to wait before creating a batch
+  BatchTimeout: 2s
+
+  # Batch Size: Controls the number of messages batched into a block
+  BatchSize:
+    MaxMessageCount: 10
+    AbsoluteMaxBytes: 98 MB
+    PreferredMaxBytes: 512 KB
+
+
+Application: &ApplicationDefaults
+
+  
+  # Default policies
+  Policies: &ApplicationDefaultPolicies
+
+    # approveformyorg
+    LifecycleEndorsement:
+        Type: ImplicitMeta
+        # Rule: "MAJORITY Endorsement"
+        Rule: "ANY Endorsement"
+    
+    # --channel-config-policy
+    Endorsement:
+        Type: ImplicitMeta
+        Rule: "MAJORITY Endorsement"
+    Readers:
+        Type: ImplicitMeta
+        Rule: "ANY Readers"
+    Writers:
+        Type: ImplicitMeta
+        Rule: "ANY Writers"
+    Admins:
+        Type: ImplicitMeta
+        Rule: "MAJORITY Admins"
+
+
+  Organizations:
+ 
+
+#   CHANNEL
+Channel: &ChannelDefaults
+  Policies:
+    Readers:
+        Type: ImplicitMeta
+        Rule: "ANY Readers"
+    Writers:
+        Type: ImplicitMeta
+        Rule: "ANY Writers"
+    Admins:
+        Type: ImplicitMeta
+        Rule: "MAJORITY Admins"
+ 
+#   PROFILES
+Profiles:
+
+  HealthcareOrdererGenesis:
+      <<: *ChannelDefaults
+      Orderer:
+          <<: *OrdererDefaults
+          Organizations:
+              - <<: *Orderer
+      Consortiums:
+        HealthcareConsortium:   
+            Organizations:
+                  - <<: *Org1
+                  - <<: *Org2
+                  - <<: *Org3
+                  - <<: *Org4
+                  - <<: *Org5
+                  - <<: *Org6
+
+                  
+  HealthcareChannel:
+    <<: *ChannelDefaults
+    Consortium: HealthcareConsortium
+        
+    Application:
+        <<: *ApplicationDefaults
+        
+        Organizations:
+            - <<: *Org1
+            - <<: *Org2
+            - <<: *Org3
+            - <<: *Org4
+            - <<: *Org5
+            - <<: *Org6
+
+          
+
+          
+
+
+
