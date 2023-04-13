@@ -1,4 +1,4 @@
-cd /Users/aj007/hyp/fabric-samples/healthcare/docker/config
+cd /home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config
 
 cryptogen generate --config=./crypto-config.yaml
 export FABRIC_CFG_PATH=$PWD
@@ -14,8 +14,8 @@ docker-compose -f ./docker-compose-base.yaml up -d
 export FABRIC_CFG_PATH=$PWD/patient
 export CORE_PEER_TLS_ENABLED=true
 export CORE_PEER_LOCALMSPID="bojackMSP"
-export CORE_PEER_TLS_ROOTCERT_FILE=/Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/peerOrganizations/patient.com/peers/peer0.patient.com/tls/ca.crt
-export CORE_PEER_MSPCONFIGPATH=/Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/peerOrganizations/patient.com/users/Admin@patient.com/msp
+export CORE_PEER_TLS_ROOTCERT_FILE=/home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config/crypto-config/peerOrganizations/patient.com/peers/peer0.patient.com/tls/ca.crt
+export CORE_PEER_MSPCONFIGPATH=/home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config/crypto-config/peerOrganizations/patient.com/users/Admin@patient.com/msp
 export CORE_PEER_ADDRESS=0.0.0.0:7051 
 
 
