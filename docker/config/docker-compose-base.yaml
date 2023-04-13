@@ -54,11 +54,11 @@ services:
     # Host folder mappings
     volumes:
     # Folder with genesis block
-    - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/orderer:/var/hyperledger/config
+    - /home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config/orderer:/var/hyperledger/config
     # Map the folder with MSP for orderer
-    - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer.healthcare.com/msp:/var/hyperledger/config/msp
+    - /home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer.healthcare.com/msp:/var/hyperledger/config/msp
     # Added to support the TLS setup
-    - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer.healthcare.com/tls:/var/hyperledger/tls
+    - /home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer.healthcare.com/tls:/var/hyperledger/tls
     - data-orderer.healthcare.com:/var/ledger
     ports:
       - 7050:7050
@@ -96,11 +96,11 @@ services:
     # Host folder mappings
     volumes:
     # Folder with genesis block
-    - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/orderer:/var/hyperledger/config
+    - /home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config/orderer:/var/hyperledger/config
     # Map the folder with MSP for orderer
-    - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer2.healthcare.com/msp:/var/hyperledger/config/msp
+    - /home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer2.healthcare.com/msp:/var/hyperledger/config/msp
     # Added to support the TLS setup
-    - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer2.healthcare.com/tls:/var/hyperledger/tls
+    - /home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer2.healthcare.com/tls:/var/hyperledger/tls
     - data-orderer2.healthcare.com:/var/ledger
     ports:
       - 8050:7050
@@ -138,11 +138,11 @@ services:
     # Host folder mappings
     volumes:
     # Folder with genesis block
-    - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/orderer:/var/hyperledger/config
+    - /home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config/orderer:/var/hyperledger/config
     # Map the folder with MSP for orderer
-    - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer3.healthcare.com/msp:/var/hyperledger/config/msp
+    - /home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer3.healthcare.com/msp:/var/hyperledger/config/msp
     # Added to support the TLS setup
-    - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer3.healthcare.com/tls:/var/hyperledger/tls
+    - /home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer3.healthcare.com/tls:/var/hyperledger/tls
     - data-orderer3.healthcare.com:/var/ledger
     ports:
       - 9050:7050
@@ -182,11 +182,11 @@ services:
     # Host folder mappings
     volumes:
     # Folder with genesis block
-    - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/orderer:/var/hyperledger/config
+    - /home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config/orderer:/var/hyperledger/config
     # Map the folder with MSP for orderer
-    - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer4.healthcare.com/msp:/var/hyperledger/config/msp
+    - /home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer4.healthcare.com/msp:/var/hyperledger/config/msp
     # Added to support the TLS setup
-    - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer4.healthcare.com/tls:/var/hyperledger/tls
+    - /home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer4.healthcare.com/tls:/var/hyperledger/tls
     - data-orderer4.healthcare.com:/var/ledger
     ports:
       - 10050:7050
@@ -225,11 +225,11 @@ services:
     # Host folder mappings
     volumes:
     # Folder with genesis block
-    - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/orderer:/var/hyperledger/config
+    - /home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config/orderer:/var/hyperledger/config
     # Map the folder with MSP for orderer
-    - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer5.healthcare.com/msp:/var/hyperledger/config/msp
+    - /home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer5.healthcare.com/msp:/var/hyperledger/config/msp
     # Added to support the TLS setup
-    - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer5.healthcare.com/tls:/var/hyperledger/tls
+    - /home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config/crypto-config/ordererOrganizations/healthcare.com/orderers/orderer5.healthcare.com/tls:/var/hyperledger/tls
     - data-orderer5.healthcare.com:/var/ledger
     ports:
       - 11050:7050
@@ -271,11 +271,11 @@ services:
     volumes:
       # Folder with channel create tx file
       - /var/run/docker.sock:/host/var/run/docker.sock
-      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/patient:/var/hyperledger/config
+      - /home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config/patient:/var/hyperledger/config
       # Map the folder with MSP for Peer
-      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/peerOrganizations/patient.com/peers/peer0.patient.com/msp:/var/hyperledger/config/msp
+      - /home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config/crypto-config/peerOrganizations/patient.com/peers/peer0.patient.com/msp:/var/hyperledger/config/msp
       # Added to support the TLS setup
-      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/peerOrganizations/patient.com/peers/peer0.patient.com/tls:/var/hyperledger/fabric/tls
+      - /home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config/crypto-config/peerOrganizations/patient.com/peers/peer0.patient.com/tls:/var/hyperledger/fabric/tls
       - /var/run/:/var/run/
       - data-peer0.patient.com:/var/hyperledger/production
     depends_on: 
@@ -326,11 +326,11 @@ services:
     volumes:
       # Folder with channel create tx file
       - /var/run/docker.sock:/host/var/run/docker.sock      
-      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/healthcare:/var/hyperledger/config
+      - /home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config/healthcare:/var/hyperledger/config
       # Map the folder with MSP for Peer
-      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/peerOrganizations/healthcare.com/peers/peer0.healthcare.com/msp:/var/hyperledger/config/msp
+      - /home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config/crypto-config/peerOrganizations/healthcare.com/peers/peer0.healthcare.com/msp:/var/hyperledger/config/msp
       # Added to support the TLS setup
-      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/peerOrganizations/healthcare.com/peers/peer0.healthcare.com/tls:/var/hyperledger/fabric/tls
+      - /home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config/crypto-config/peerOrganizations/healthcare.com/peers/peer0.healthcare.com/tls:/var/hyperledger/fabric/tls
       - /var/run/:/var/run/
       - data-peer0.healthcare.com:/var/hyperledger/production
     depends_on: 
@@ -364,9 +364,9 @@ services:
       - /Users/aj007/hyp/fabric-samples/healthcare/docker/artefacts/nodechaincode:/opt/nodechaincode
       - /Users/aj007/hyp/fabric-samples/healthcare/docker/gopath:/opt/gopath
       # Folder with channel create tx file
-      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config:/var/hyperledger/config
+      - /home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config:/var/hyperledger/config
       # Map the folder to root of all Fabric CA Client crypto
-      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/peerOrganizations:/var/hyperledger/crypto
+      - /home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config/crypto-config/peerOrganizations:/var/hyperledger/crypto
       # VM docker stream folder mapping
       - /var/run/:/host/var/run/
       # Map the bins folder
@@ -411,12 +411,12 @@ services:
     # host file system mappings
     volumes:
       # Folder with channel create tx file
-      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/insurance:/var/hyperledger/config
+      - /home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config/insurance:/var/hyperledger/config
       - /var/run/docker.sock:/host/var/run/docker.sock
               # Map the folder with MSP for Peer
-      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/peerOrganizations/insurance.com/peers/peer0.insurance.com/msp:/var/hyperledger/config/msp
+      - /home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config/crypto-config/peerOrganizations/insurance.com/peers/peer0.insurance.com/msp:/var/hyperledger/config/msp
       # Added to support the TLS setup
-      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/peerOrganizations/insurance.com/peers/peer0.insurance.com/tls:/var/hyperledger/fabric/tls
+      - /home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config/crypto-config/peerOrganizations/insurance.com/peers/peer0.insurance.com/tls:/var/hyperledger/fabric/tls
       - /var/run/:/var/run/
       - data-peer0.insurance.com:/var/hyperledger/production
     depends_on: 
@@ -466,11 +466,11 @@ services:
     volumes:
       # Folder with channel create tx file
       - /var/run/docker.sock:/host/var/run/docker.sock
-      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/epharma:/var/hyperledger/config
+      - /home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config/epharma:/var/hyperledger/config
       # Map the folder with MSP for Peer
-      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/peerOrganizations/epharma.com/peers/peer0.epharma.com/msp:/var/hyperledger/config/msp
+      - /home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config/crypto-config/peerOrganizations/epharma.com/peers/peer0.epharma.com/msp:/var/hyperledger/config/msp
       # Added to support the TLS setup
-      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/peerOrganizations/epharma.com/peers/peer0.epharma.com/tls:/var/hyperledger/fabric/tls
+      - /home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config/crypto-config/peerOrganizations/epharma.com/peers/peer0.epharma.com/tls:/var/hyperledger/fabric/tls
       - /var/run/:/var/run/
       - data-peer0.epharma.com:/var/hyperledger/production
     depends_on: 
@@ -521,11 +521,11 @@ services:
     volumes:
       # Folder with channel create tx file
       - /var/run/docker.sock:/host/var/run/docker.sock
-      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/ehospital:/var/hyperledger/config
+      - /home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config/ehospital:/var/hyperledger/config
       # Map the folder with MSP for Peer
-      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/peerOrganizations/ehospital.com/peers/peer0.ehospital.com/msp:/var/hyperledger/config/msp
+      - /home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config/crypto-config/peerOrganizations/ehospital.com/peers/peer0.ehospital.com/msp:/var/hyperledger/config/msp
       # Added to support the TLS setup
-      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/peerOrganizations/ehospital.com/peers/peer0.ehospital.com/tls:/var/hyperledger/fabric/tls
+      - /home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config/crypto-config/peerOrganizations/ehospital.com/peers/peer0.ehospital.com/tls:/var/hyperledger/fabric/tls
       - /var/run/:/var/run/
       - data-peer0.ehospital.com:/var/hyperledger/production
     depends_on: 
@@ -576,11 +576,11 @@ services:
     volumes:
       # Folder with channel create tx file
       - /var/run/docker.sock:/host/var/run/docker.sock
-      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/elab:/var/hyperledger/config
+      - /home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config/elab:/var/hyperledger/config
       # Map the folder with MSP for Peer
-      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/peerOrganizations/elab.com/peers/peer0.elab.com/msp:/var/hyperledger/config/msp
+      - /home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config/crypto-config/peerOrganizations/elab.com/peers/peer0.elab.com/msp:/var/hyperledger/config/msp
       # Added to support the TLS setup
-      - /Users/aj007/hyp/fabric-samples/healthcare/docker/config/crypto-config/peerOrganizations/elab.com/peers/peer0.elab.com/tls:/var/hyperledger/fabric/tls
+      - /home/kasun-webmotech/Desktop/esoft/Final-research-project/Healthcare-network/docker/config/crypto-config/peerOrganizations/elab.com/peers/peer0.elab.com/tls:/var/hyperledger/fabric/tls
       - /var/run/:/var/run/
       - data-peer0.elab.com:/var/hyperledger/production
     depends_on: 
